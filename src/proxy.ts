@@ -4,8 +4,9 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Public routes that bypass auth entirely
-  if (pathname.startsWith('/reply-quiz')) {
+  // Public routes that bypass auth entirely.
+  // Keep the main shared link usable while auth-backed pages can be wired later.
+  if (pathname === '/' || pathname.startsWith('/reply-quiz')) {
     return NextResponse.next({ request })
   }
 
