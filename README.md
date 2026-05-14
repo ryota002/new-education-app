@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 新人教育システム
 
-## Getting Started
+動画教材、理解度クイズ、XP/レベル、スキルレーダー、管理者向けのコース・クイズ管理を備えた新人教育アプリです。ログイン不要で試せる「受講生返信クイズ」も同梱しています。
 
-First, run the development server:
+## 主な画面
+
+- `/auth/login`: ログイン
+- `/dashboard`: 新人向けダッシュボード
+- `/courses`: コース一覧
+- `/profile`: プロフィールとスキル可視化
+- `/admin`: 管理者ダッシュボード
+- `/admin/courses`: コース・クイズ管理
+- `/reply-quiz`: 受講生返信トレーニング
+
+## セットアップ
+
+Node.js 20.9 以上を使います。迷ったら Node.js 22 を使ってください。
+
+1. 環境変数の見本をコピーします。
+
+```bash
+cp .env.example .env.local
+```
+
+`.env.local` に Supabase の接続情報を入れます。
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+2. 依存関係をインストールします。
+
+```bash
+npm install
+```
+
+3. Supabase SQL Editor で `supabase/setup.sql` を丸ごと実行します。
+
+既存プロジェクトに分けて適用したい場合は、以下を順番に実行してください。
+
+```bash
+supabase/migrations/001_initial_schema.sql
+supabase/migrations/002_rls_policies.sql
+supabase/seed.sql
+```
+
+4. Supabase Auth でユーザーを作成します。
+
+管理者にしたいユーザーは、作成後に Supabase Table Editor で `public.users.role` を `manager` に更新してください。
+
+5. 起動します。
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ブラウザで `http://localhost:3000` を開きます。ログイン後、ロールに応じて新人画面または管理画面へ遷移します。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 検証
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+```
 
-## Learn More
+またはまとめて確認します。
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run check
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Vercel で渡す場合
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+一番簡単な共有方法は Vercel へのデプロイです。
 
-## Deploy on Vercel
+1. このフォルダを GitHub リポジトリに push
+2. Vercel で New Project からそのリポジトリを選択
+3. Environment Variables に `.env.example` と同じ2項目を設定
+4. Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Supabase 側の URL 設定も忘れずに更新してください。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Site URL: Vercel の公開 URL
+- Redirect URLs: Vercel の公開 URL
